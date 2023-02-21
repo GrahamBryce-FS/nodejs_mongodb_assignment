@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const { connect, saveMovie, disconnect  } = require("../db/db");
 const morgan = require("morgan");
 const movieRoutes = require("../api/routes/movies");
 const directorRoutes = require("../api/routes/directors");
@@ -22,7 +23,6 @@ app.use((req,res,next)=>{
     }
     next();
 });
-
 
 app.get("/", (req,res,next)=>{
     res.status(201).json({
@@ -49,12 +49,5 @@ app.use((error, req, res, next)=>{
     });
 });
 
-mongoose.connect(process.env.mongoDBURL, (err)=>{
-    if(err){
-        console.error("Error: ", err.message);
-    }
-    else{
-        console.log("MONGO CONNECTED")
-    }
-});
+connect();
 module.exports = app;
