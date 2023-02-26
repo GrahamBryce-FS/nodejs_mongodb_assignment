@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const movieSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    movie: String,
-    director: String
+    movie: {type: String, required: true},
+    director: {type: String, required: true}
 });
 
 // export model

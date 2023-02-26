@@ -17,7 +17,6 @@ router.get("/", (req,res,next)=>{
     });
 });
 
-// done
 router.post("/",(req,res,next)=>{
     const newMovie = new Movie({
         // this is a method
@@ -51,7 +50,6 @@ router.post("/",(req,res,next)=>{
     })
 });
 
-// done
 router.get("/:movieId",(req,res,next)=>{
     const movieId = req.params.movieId;
     Movie.findById(movieId)
@@ -78,7 +76,6 @@ router.get("/:movieId",(req,res,next)=>{
     });
 });
 
-// done
 router.patch("/:movieId",(req,res,next)=>{
     const movieId = req.params.movieId;
     const updatedMovie = {
@@ -113,7 +110,6 @@ router.patch("/:movieId",(req,res,next)=>{
     });
 });
 
-// done
 router.delete("/:movieId",(req,res,next)  =>{
     const movieId = req.params.movieId;
     Movie.deleteOne({
