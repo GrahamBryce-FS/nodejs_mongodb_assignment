@@ -3,7 +3,7 @@ const router = express.Router();
 const Director= require("../models/movies");
 const mongoose = require("mongoose");
 const messages = require("../../messages/messages");
-const { director_deleted, director_update, director_saved, already_exists } = require("../../messages/messages");
+const { got_by_id, director_deleted, director_update, director_saved, already_exists } = require("../../messages/messages");
 
 router.get("/",(req,res,next)=>{
     allDirectors = Director.find({})
@@ -83,6 +83,7 @@ router.get("/:directorId",(req,res,next)=>{
             })
         }
         res.status(201).json({
+            message: got_by_id,
             director: director
         });
         console.log(director);
@@ -102,10 +103,10 @@ router.patch("/:directorId",(req,res,next)=>{
         movie: req.body.movie,
         director: req.body.director
     };
-    Director.updateOne({
+    Director.findOneAndUpdate({
         _id: directorId
-    }, {
-        $set: updatedDirector
+    }, updatedDirector, {
+        new:true
     })
     .select("director _id")
     .populate("movie", "movie director")
@@ -115,9 +116,9 @@ router.patch("/:directorId",(req,res,next)=>{
         res.status(200).json({
             message: director_update,
             director: {
+                id: result._id,
                 director: result.director,
-                movie: result.movie,
-                id: result._id
+                movie: result.movie
             },
             metadata:{
                 host: req.hostname,
@@ -140,8 +141,7 @@ router.delete("/:directorId",(req,res,next)=>{
         _id: directorId
     })
     .then(result =>{
-        if(!director){
-            console.log(director);
+        if(result.deletedCount === 0){
             return res.status(404).json({
                 message: messages.director_not_found
             })
@@ -154,7 +154,7 @@ router.delete("/:directorId",(req,res,next)=>{
     .catch(err => {
         res.status(500).json({
             error: {
-                message: err.message,
+                message: messages.director_not_found
             }
         })
     });
